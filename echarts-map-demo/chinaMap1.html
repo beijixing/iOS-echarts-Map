@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="js/echarts.js"></script>
+    <script src="js/china.js"></script>
+    <!--<script src="custom_map.js"></script>-->
+</head>
+<body>
+<div id="main" style="width: 800px;height:800px;"></div>
+<script>
+    var myChart = echarts.init(document.getElementById('main'));
+
+    myChart.on('mapselectchanged', function(params) { 
+       
+        var name = params.batch[0].name;
+        alert(name); 
+        // var mapCode = cityMap[name];
+        // if (!mapCode) {
+        //     alert('无此区域地图显示');
+        //     return;
+        // }
+        // loadMap(mapCode, name); 
+        // //将上一级地图信息压入mapStack
+        // mapStack.push({
+        //     mapCode: curMap.mapCode,
+        //     mapName: curMap.mapName
+        // }); 
+    });
+
+    option = {
+        title: {
+            text: '订单量',
+            subtext: '纯属虚构',
+            x: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}'
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data: ['订单量']
+        },
+        dataRange: {
+            x: 'left',
+            y: 'bottom',
+            splitList: [
+                {start: 1500},
+                {start: 900, end: 1500},
+                {start: 310, end: 1000},
+                {start: 200, end: 300},
+                {start: 10, end: 200, label: '10 到 200（自定义label）'},
+                {start: 5, end: 5, label: '5（自定义特殊颜色）', color: 'black'},
+                {end: 10}
+            ],
+            color: ['#E0022B', '#E09107', '#A3E00B']
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            x: 'right',
+            y: 'center',
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        roamController: {
+            show: true,
+            x: 'right',
+            mapTypeControl: {
+                'china': true
+            }
+        },
+        series: [
+            {
+                name: '订单量',
+                type: 'map',
+                mapType: 'china',
+                roam: false,
+                selectedMode : 'single',
+                itemStyle: {
+                    normal: {
+                        color: 'orange',
+                        label: {
+                            show: true,
+                            textStyle: {
+                                color: "rgb(249, 0, 0)"
+                            }
+                        }
+                    },
+                    emphasis: {label: {show: true}}
+                },
+                data: [
+                    {name: '北京', value: Math.round(Math.random() * 10)},
+                ]
+            }
+        ]
+    };
+    myChart.setOption(option);
+
+</script>
+</body>
+</html>

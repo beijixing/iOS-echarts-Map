@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+  <head >
+  <meta charset="utf-8">
+<!--  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=2,user-scalable=yes" />-->
+
+    <script type="text/javascript" src="echarts.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="china-main-city-map.js" charset="utf-8"></script>
+  </head>
+  
+  <body style="width: 100%; height: 100%; margin: 0">
+  <div id="main" style="width: 100%; height:100%;"></div>
+ <script type="text/javascript">
+ 
+var myChart = echarts.init(document.getElementById('main'));
+var option = {}
+//初始化地图
+myChart.on('mapselectchanged', function(params) {   
+    var name = params.batch[0].name;
+    var mapCode = cityMap[name];
+    mapselectchanged(name, mapCode)
+});
+/**
+   加载地图：根据地图所在省市的行政编号，
+   获取对应的json地图数据，然后向echarts注册该区域的地图
+   最后加载地图信息
+   @params {String} mapCode:地图行政编号,for example['中国':'100000', '湖南': '430000']
+   @params {String} mapName: 地图名称
+*/
+var loadMap = function(mapName, mapData) {
+     echarts.registerMap(mapName, mapData);
+     myChart.setOption(option);  
+}
+
+var testFunc = function() {
+    
+    var param = {
+        commodity_id : "commodity_id",
+    }
+    param = JSON.stringify(param);
+    alert(param)
+
+}
+
+var updateMapOption = function(mapName, showData, markPointData) {
+    var param = JSON.stringify(showData);
+    //alert(param)
+    var param = JSON.stringify(markPointData);
+    //alert(param)
+    option = {
+        title: {
+            text: mapName,
+            subtext: '',
+            x: 'center'
+        },
+        dataRange: {
+            min: 0,
+            max: 2500,
+            x: 'left',
+            y: 'bottom',
+            text: ['高', '低'],           // 文本，默认为数值文本
+            calculable: true
+        },
+        series: [
+            {
+                name: mapName,
+                type: 'map',
+                mapType: mapName,
+                roam: false,
+                selectedMode : 'single',
+                itemStyle:{
+                        normal:{
+                            label:{
+                                show:true,
+                                textStyle: {
+                                    fontSize:8
+                                },
+                                formatter:'{b}\n{c}',
+                            }
+                        },
+                        emphasis:{
+                            label:{
+                                show:true,
+                                textStyle: {
+                                    fontSize:8
+                                }
+                            }
+                        },
+                    },
+                data: showData,
+                markPoint: {//图形
+                        symbolSize: 80,
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter: '{b}\n{c}',
+                                color: "#FF0000"
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                areaColor: '#C1FFC1',
+                                color: ['rgba(127, 255, 0, 0.7)'],
+                                label: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize:8,
+                                        color: "#FF0000"
+                                    }
+                                }
+                            },
+                            emphasis: {
+                                color: ['rgb(127, 255, 0)']
+                            }
+                        },
+                        markArea: {
+                            itemStyle: {
+                                normal: {
+                                    color: ['#7FFFD4']
+                                }
+                            }
+                        },
+                        data: markPointData
+                    }
+            }
+        ]
+    }
+} 
+
+ </script>
+     
+  </body>
+</html>
